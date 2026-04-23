@@ -135,7 +135,7 @@ GLMS/
 ---
 
 ## Architecture Decisions
-- **Monolith pattern** — all layers in one ASP.NET Core project (as per Part 2 spec)
+- **Monolith pattern** — all layers in one ASP.NET Core project 
 - **Strategy pattern** — `ICurrencyService` allows swap between live API and fallback rate
 - **Observer-ready** — `IEmailService` decouples notification logic from controllers
 - **Factory-ready** — `IFileService` abstracts file storage for future cloud migration
