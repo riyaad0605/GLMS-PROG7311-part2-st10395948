@@ -1,0 +1,80 @@
+@model ServiceRequestCreateViewModel
+@{ ViewData["Title"] = "Raise Service Request"; }
+
+<div class="row justify-content-center">
+<div class="col-md-7">
+<h2><i class="bi bi-plus-circle me-2"></i>Raise Service Request</h2>
+<p class="text-muted small">Only active or draft contracts are available. Costs are auto-converted from USD to ZAR using the live exchange rate.</p>
+<hr />
+
+<form asp-action="Create" method="post">
+    <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+    <div class="mb-3">
+        <label asp-for="ContractId" class="form-label fw-semibold"></label>
+        <select asp-for="ContractId" asp-items="ViewBag.Contracts" class="form-select">
+            <option value="">-- Select Contract --</option>
+        </select>
+        <span asp-validation-for="ContractId" class="text-danger small"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Description" class="form-label fw-semibold"></label>
+        <textarea asp-for="Description" class="form-control" rows="3"
+                  placeholder="Describe the service required..."></textarea>
+        <span asp-validation-for="Description" class="text-danger small"></span>
+    </div>
+
+    <!-- Live currency conversion -->
+    <div class="card bg-light mb-4">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="fw-semibold small">Currency Conversion</span>
+                <span class="badge bg-success">
+                    <i class="bi bi-graph-up me-1"></i>
+                    Live Rate: 1 USD = R <span id="rateDisplay">@Model.ExchangeRate.ToString("N4")</span>
+                </span>
+            </div>
+            <div class="row g-3 align-items-center">
+                <div class="col-md-6">
+                    <label asp-for="CostUsd" class="form-label fw-semibold"></label>
+                    <div class="input-group">
+                        <span class="input-group-text">$</span>
+                        <input asp-for="CostUsd" id="costUsd" class="form-control"
+                               placeholder="0.00" step="0.01" min="0.01" />
+                    </div>
+                    <span asp-validation-for="CostUsd" class="text-danger small"></span>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold text-success">Converted Cost (ZAR)</label>
+                    <div class="input-group">
+                        <span class="input-group-text">R</span>
+                        <input id="costZarDisplay" class="form-control bg-white fw-semibold text-success"
+                               readonly placeholder="0.00" />
+                    </div>
+                    <input type="hidden" asp-for="ExchangeRate" id="exchangeRate" value="@Model.ExchangeRate" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">
+        <i class="bi bi-send me-1"></i>Submit Request
+    </button>
+    <a asp-action="Index" class="btn btn-secondary ms-2">Cancel</a>
+</form>
+</div></div>
+
+@section Scripts {
+<script>
+    // Auto-calculate ZAR whenever the USD amount changes
+    const rate = parseFloat(document.getElementById('exchangeRate').value) || 0;
+    document.getElementById('rateDisplay').textContent = rate.toFixed(4);
+
+    document.getElementById('costUsd').addEventListener('input', function () {
+        const usd = parseFloat(this.value) || 0;
+        const zar = (usd * rate).toFixed(2);
+        document.getElementById('costZarDisplay').value = zar > 0 ? zar : '';
+    });
+</script>
+}

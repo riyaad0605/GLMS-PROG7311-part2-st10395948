@@ -1,0 +1,53 @@
+@model IEnumerable<ServiceRequest>
+@{ ViewData["Title"] = "Service Requests"; }
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2><i class="bi bi-tools me-2"></i>Service Requests</h2>
+    <a asp-action="Create" class="btn btn-primary">
+        <i class="bi bi-plus-lg me-1"></i>Raise Request
+    </a>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-body p-0">
+        <table class="table table-hover mb-0">
+            <thead class="table-dark">
+                <tr>
+                    <th>#</th><th>Contract</th><th>Client</th><th>Description</th>
+                    <th>Cost (USD)</th><th>Cost (ZAR)</th><th>Status</th><th>Date</th><th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var r in Model)
+                {
+                    <tr>
+                        <td class="text-muted small">@r.ServiceRequestId</td>
+                        <td>
+                            <a asp-controller="Contracts" asp-action="Details"
+                               asp-route-id="@r.ContractId">#@r.ContractId</a>
+                        </td>
+                        <td>@r.Contract?.Client?.Name</td>
+                        <td>
+                            <span title="@r.Description">
+                                @(r.Description.Length > 50 ? r.Description[..50] + "…" : r.Description)
+                            </span>
+                        </td>
+                        <td>$ @r.CostUsd.ToString("N2")</td>
+                        <td class="fw-semibold">R @r.CostZar.ToString("N2")</td>
+                        <td><span class="badge bg-info text-dark">@r.Status</span></td>
+                        <td class="small">@r.DateCreated.ToString("yyyy-MM-dd")</td>
+                        <td>
+                            <a asp-action="Details" asp-route-id="@r.ServiceRequestId"
+                               class="btn btn-sm btn-outline-info">View</a>
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <a asp-action="Delete" asp-route-id="@r.ServiceRequestId"
+                                   class="btn btn-sm btn-outline-danger">Delete</a>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,104 @@
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<h2 class="mb-4"><i class="bi bi-speedometer2 me-2"></i>Dashboard</h2>
+
+<div class="row g-4 mb-5">
+    <div class="col-sm-6 col-xl-3">
+        <div class="card border-0 shadow-sm h-100" style="border-left:4px solid #1a3a5c!important;">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <p class="text-muted small mb-1">Total Clients</p>
+                        <h3 class="fw-bold mb-0">@ViewBag.ClientCount</h3>
+                    </div>
+                    <i class="bi bi-people-fill text-primary" style="font-size:2.2rem;opacity:.7;"></i>
+                </div>
+                <a asp-controller="Clients" asp-action="Index" class="stretched-link"></a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-6 col-xl-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <p class="text-muted small mb-1">Total Contracts</p>
+                        <h3 class="fw-bold mb-0">@ViewBag.ContractCount</h3>
+                    </div>
+                    <i class="bi bi-file-earmark-text text-success" style="font-size:2.2rem;opacity:.7;"></i>
+                </div>
+                <a asp-controller="Contracts" asp-action="Index" class="stretched-link"></a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-6 col-xl-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <p class="text-muted small mb-1">Active Contracts</p>
+                        <h3 class="fw-bold mb-0 text-success">@ViewBag.ActiveContracts</h3>
+                    </div>
+                    <i class="bi bi-check-circle text-success" style="font-size:2.2rem;opacity:.7;"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-6 col-xl-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <p class="text-muted small mb-1">Service Requests</p>
+                        <h3 class="fw-bold mb-0">@ViewBag.RequestCount</h3>
+                    </div>
+                    <i class="bi bi-tools text-warning" style="font-size:2.2rem;opacity:.7;"></i>
+                </div>
+                <a asp-controller="ServiceRequests" asp-action="Index" class="stretched-link"></a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-header fw-semibold"><i class="bi bi-lightning me-2"></i>Quick Actions</div>
+            <div class="card-body d-flex flex-wrap gap-2">
+                @if (User.IsInRole("Admin"))
+                {
+                    <a asp-controller="Clients" asp-action="Create" class="btn btn-outline-primary">
+                        <i class="bi bi-person-plus me-1"></i>Add Client
+                    </a>
+                    <a asp-controller="Contracts" asp-action="Create" class="btn btn-outline-success">
+                        <i class="bi bi-file-plus me-1"></i>New Contract
+                    </a>
+                }
+                <a asp-controller="ServiceRequests" asp-action="Create" class="btn btn-outline-warning">
+                    <i class="bi bi-plus-circle me-1"></i>Raise Request
+                </a>
+                <a asp-controller="Contracts" asp-action="Search" class="btn btn-outline-info">
+                    <i class="bi bi-search me-1"></i>Search Contracts
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-header fw-semibold"><i class="bi bi-info-circle me-2"></i>System Info</div>
+            <div class="card-body">
+                <small class="text-muted">
+                    <strong>Logged in as:</strong> @User.Identity?.Name<br />
+                    <strong>Role:</strong> @(User.IsInRole("Admin") ? "Administrator" : "Logistics Manager")<br />
+                    <strong>Module:</strong> PROG7311 &mdash; ST10395948
+                </small>
+            </div>
+        </div>
+    </div>
+</div>

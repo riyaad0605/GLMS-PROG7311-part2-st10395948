@@ -1,0 +1,94 @@
+@model Contract
+@{ ViewData["Title"] = $"Contract #{Model.ContractId}"; }
+
+<div class="d-flex justify-content-between align-items-start mb-3">
+    <h2>
+        <i class="bi bi-file-earmark-text me-2"></i>Contract #@Model.ContractId
+        <span class="badge ms-2 @(Model.Status == ContractStatus.Active ? "bg-success" :
+            Model.Status == ContractStatus.Draft ? "bg-secondary" :
+            Model.Status == ContractStatus.Expired ? "bg-danger" : "bg-warning text-dark")">
+            @Model.Status
+        </span>
+    </h2>
+    @if (User.IsInRole("Admin"))
+    {
+        <a asp-action="Edit" asp-route-id="@Model.ContractId" class="btn btn-warning">
+            <i class="bi bi-pencil me-1"></i>Edit
+        </a>
+    }
+</div>
+<hr />
+
+<div class="row">
+    <div class="col-md-6">
+        <dl class="row">
+            <dt class="col-sm-4">Client</dt>
+            <dd class="col-sm-8 fw-semibold">@Model.Client?.Name</dd>
+            <dt class="col-sm-4">Start Date</dt>
+            <dd class="col-sm-8">@Model.StartDate.ToString("dd MMM yyyy")</dd>
+            <dt class="col-sm-4">End Date</dt>
+            <dd class="col-sm-8">@Model.EndDate.ToString("dd MMM yyyy")</dd>
+            <dt class="col-sm-4">Service Level</dt>
+            <dd class="col-sm-8">@Model.ServiceLevel</dd>
+        </dl>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header fw-semibold"><i class="bi bi-file-pdf me-2"></i>Signed Agreement</div>
+            <div class="card-body">
+                @if (!string.IsNullOrEmpty(Model.SignedAgreementPath))
+                {
+                    <p class="text-success small mb-2"><i class="bi bi-check-circle me-1"></i>Agreement on file.</p>
+                    <a asp-action="DownloadAgreement" asp-route-id="@Model.ContractId"
+                       class="btn btn-sm btn-outline-success">
+                        <i class="bi bi-download me-1"></i>Download PDF
+                    </a>
+                }
+                else
+                {
+                    <p class="text-muted small mb-2">No agreement uploaded yet.</p>
+                }
+
+                @if (User.IsInRole("Admin"))
+                {
+                    <form asp-action="UploadAgreement" asp-route-id="@Model.ContractId"
+                          method="post" enctype="multipart/form-data" class="mt-3">
+                        @Html.AntiForgeryToken()
+                        <div class="input-group input-group-sm">
+                            <input type="file" name="signedAgreement" class="form-control" accept=".pdf" required />
+                            <button type="submit" class="btn btn-primary">Upload</button>
+                        </div>
+                        <div class="form-text">PDF only, max 10 MB.</div>
+                    </form>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (Model.ServiceRequests.Any())
+{
+    <h5 class="mt-4"><i class="bi bi-tools me-2"></i>Service Requests (@Model.ServiceRequests.Count)</h5>
+    <table class="table table-sm table-bordered">
+        <thead class="table-secondary">
+            <tr><th>#</th><th>Description</th><th>Cost (USD)</th><th>Cost (ZAR)</th><th>Status</th><th>Date</th></tr>
+        </thead>
+        <tbody>
+            @foreach (var sr in Model.ServiceRequests)
+            {
+                <tr>
+                    <td>@sr.ServiceRequestId</td>
+                    <td>@sr.Description</td>
+                    <td>$ @sr.CostUsd.ToString("N2")</td>
+                    <td>R @sr.CostZar.ToString("N2")</td>
+                    <td><span class="badge bg-info text-dark">@sr.Status</span></td>
+                    <td>@sr.DateCreated.ToString("yyyy-MM-dd")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<a asp-action="Index" class="btn btn-secondary mt-3">
+    <i class="bi bi-arrow-left me-1"></i>Back to List
+</a>

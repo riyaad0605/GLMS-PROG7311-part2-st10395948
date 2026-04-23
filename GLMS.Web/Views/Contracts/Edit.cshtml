@@ -1,0 +1,55 @@
+@model Contract
+@{ ViewData["Title"] = "Edit Contract"; }
+
+<div class="row justify-content-center">
+<div class="col-md-7">
+<h2><i class="bi bi-pencil me-2"></i>Edit Contract <small class="text-muted fs-5">#@Model.ContractId</small></h2>
+<div class="alert alert-info small"><i class="bi bi-bell me-1"></i>Changing the status will trigger an automatic email notification to the client.</div>
+<hr />
+<form asp-action="Edit">
+    <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+    <input type="hidden" asp-for="ContractId" />
+    <input type="hidden" asp-for="SignedAgreementPath" />
+
+    <div class="mb-3">
+        <label asp-for="ClientId" class="form-label fw-semibold"></label>
+        <select asp-for="ClientId" asp-items="ViewBag.Clients" class="form-select"></select>
+        <span asp-validation-for="ClientId" class="text-danger small"></span>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label asp-for="StartDate" class="form-label fw-semibold"></label>
+            <input asp-for="StartDate" class="form-control" type="date" />
+            <span asp-validation-for="StartDate" class="text-danger small"></span>
+        </div>
+        <div class="col-md-6 mb-3">
+            <label asp-for="EndDate" class="form-label fw-semibold"></label>
+            <input asp-for="EndDate" class="form-control" type="date" />
+            <span asp-validation-for="EndDate" class="text-danger small"></span>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label asp-for="Status" class="form-label fw-semibold"></label>
+            <select asp-for="Status" class="form-select"
+                    asp-items="Html.GetEnumSelectList<ContractStatus>()"></select>
+            <span asp-validation-for="Status" class="text-danger small"></span>
+        </div>
+        <div class="col-md-6 mb-3">
+            <label asp-for="ServiceLevel" class="form-label fw-semibold"></label>
+            <select asp-for="ServiceLevel" class="form-select">
+                <option value="Basic">Basic</option>
+                <option value="Standard">Standard</option>
+                <option value="Premium">Premium</option>
+                <option value="Enterprise">Enterprise</option>
+            </select>
+            <span asp-validation-for="ServiceLevel" class="text-danger small"></span>
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-warning"><i class="bi bi-save me-1"></i>Save Changes</button>
+    <a asp-action="Index" class="btn btn-secondary ms-2">Cancel</a>
+</form>
+</div></div>

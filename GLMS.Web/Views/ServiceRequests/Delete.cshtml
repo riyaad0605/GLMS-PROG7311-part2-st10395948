@@ -1,0 +1,17 @@
+@model ServiceRequest
+@{ ViewData["Title"] = "Delete Service Request"; }
+
+<h2 class="text-danger"><i class="bi bi-trash me-2"></i>Delete Service Request #@Model.ServiceRequestId</h2><hr />
+<div class="alert alert-danger">Are you sure you want to delete this service request?</div>
+<dl class="row">
+    <dt class="col-sm-3">Contract</dt><dd class="col-sm-9">#@Model.ContractId</dd>
+    <dt class="col-sm-3">Client</dt><dd class="col-sm-9">@Model.Contract?.Client?.Name</dd>
+    <dt class="col-sm-3">Description</dt><dd class="col-sm-9">@Model.Description</dd>
+    <dt class="col-sm-3">Cost (USD)</dt><dd class="col-sm-9">$ @Model.CostUsd.ToString("N2")</dd>
+    <dt class="col-sm-3">Cost (ZAR)</dt><dd class="col-sm-9 fw-bold text-success">R @Model.CostZar.ToString("N2")</dd>
+</dl>
+<form asp-action="Delete">
+    <input type="hidden" asp-for="ServiceRequestId" />
+    <button type="submit" class="btn btn-danger"><i class="bi bi-trash me-1"></i>Confirm Delete</button>
+    <a asp-action="Index" class="btn btn-secondary ms-2">Cancel</a>
+</form>

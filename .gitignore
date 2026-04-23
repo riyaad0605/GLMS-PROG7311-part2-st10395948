@@ -1,0 +1,40 @@
+## .NET / Visual Studio
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+.vs/
+bin/
+obj/
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+build/
+bld/
+Artifacts/
+
+## NuGet
+*.nupkg
+.nuget/
+packages/
+!**/packages/build/
+
+## Uploads (server files — not committed)
+GLMS.Web/wwwroot/uploads/
+
+## Secrets
+appsettings.Development.json
+secrets.json
+
+## OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+## Rider
+.idea/
+
+## Logs
+*.log
+logs/

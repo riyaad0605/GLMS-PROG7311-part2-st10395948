@@ -1,0 +1,66 @@
+@model IEnumerable<Contract>
+@{ ViewData["Title"] = "Contracts"; }
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2><i class="bi bi-file-earmark-text me-2"></i>Contracts</h2>
+    <div class="d-flex gap-2">
+        <a asp-action="Search" class="btn btn-outline-info"><i class="bi bi-funnel me-1"></i>Search</a>
+        @if (User.IsInRole("Admin"))
+        {
+            <a asp-action="Create" class="btn btn-primary"><i class="bi bi-plus-lg me-1"></i>New Contract</a>
+        }
+    </div>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-body p-0">
+        <table class="table table-hover mb-0">
+            <thead class="table-dark">
+                <tr>
+                    <th>#</th><th>Client</th><th>Start Date</th><th>End Date</th>
+                    <th>Status</th><th>Service Level</th><th>Agreement</th><th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var c in Model)
+                {
+                    <tr>
+                        <td class="text-muted small">@c.ContractId</td>
+                        <td class="fw-semibold">@c.Client?.Name</td>
+                        <td>@c.StartDate.ToString("yyyy-MM-dd")</td>
+                        <td>@c.EndDate.ToString("yyyy-MM-dd")</td>
+                        <td>
+                            <span class="badge @(c.Status == ContractStatus.Active ? "bg-success" :
+                                c.Status == ContractStatus.Draft ? "bg-secondary" :
+                                c.Status == ContractStatus.Expired ? "bg-danger" : "bg-warning text-dark")">
+                                @c.Status
+                            </span>
+                        </td>
+                        <td>@c.ServiceLevel</td>
+                        <td>
+                            @if (!string.IsNullOrEmpty(c.SignedAgreementPath))
+                            {
+                                <a asp-action="DownloadAgreement" asp-route-id="@c.ContractId"
+                                   class="btn btn-sm btn-outline-success">
+                                    <i class="bi bi-download"></i> PDF
+                                </a>
+                            }
+                            else
+                            {
+                                <span class="text-muted small">None</span>
+                            }
+                        </td>
+                        <td>
+                            <a asp-action="Details" asp-route-id="@c.ContractId" class="btn btn-sm btn-outline-info">View</a>
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <a asp-action="Edit" asp-route-id="@c.ContractId" class="btn btn-sm btn-outline-warning">Edit</a>
+                                <a asp-action="Delete" asp-route-id="@c.ContractId" class="btn btn-sm btn-outline-danger">Delete</a>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
